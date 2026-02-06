@@ -52,7 +52,8 @@ export type ShapeType =
   | 'l-shape'
   | 'c-shape'
   | 'wide-flange'
-  | 'double-angle';
+  | 'double-angle'
+  | 'stacked-rectangles';
 
 export interface ShapeParameter {
   key: string;

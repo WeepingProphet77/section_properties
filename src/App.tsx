@@ -7,7 +7,7 @@ import { Workspace } from '@/components/workspace/Workspace'
 import { ResultsPanel } from '@/components/panels/ResultsPanel'
 import { useDarkMode } from '@/hooks/useDarkMode'
 import { Button } from '@/components/ui/button'
-import { Moon, Sun } from 'lucide-react'
+import { Moon, Sun, Ruler } from 'lucide-react'
 
 function App() {
   const { isDark, toggle: toggleDark } = useDarkMode()
@@ -37,14 +37,30 @@ function App() {
   return (
     <div className="h-screen flex flex-col overflow-hidden">
       {/* Header */}
-      <header className="flex items-center justify-between px-4 py-2 border-b bg-card shrink-0">
+      <header
+        className="flex items-center justify-between px-5 py-2.5 shrink-0 text-white"
+        style={{
+          background: 'linear-gradient(135deg, var(--color-header-from), var(--color-header-to))',
+        }}
+      >
         <div className="flex items-center gap-3">
-          <h1 className="text-base font-bold tracking-tight">Section Properties Calculator</h1>
-          <span className="text-xs text-muted-foreground px-2 py-0.5 rounded-full bg-secondary">v1.0</span>
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/15">
+            <Ruler className="w-4.5 h-4.5" />
+          </div>
+          <div>
+            <h1 className="text-sm font-bold tracking-tight leading-tight">Section Properties Calculator</h1>
+            <p className="text-[10px] text-white/60 leading-tight">Elastic & Plastic Analysis</p>
+          </div>
+          <span className="text-[10px] text-white/50 px-2 py-0.5 rounded-full bg-white/10 ml-1">v1.0</span>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground hidden sm:block">US Customary Units</span>
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={toggleDark}>
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-white/50 hidden sm:block">US Customary Units (in, in², in³, in⁴)</span>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-white/70 hover:text-white hover:bg-white/10"
+            onClick={toggleDark}
+          >
             {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </Button>
         </div>

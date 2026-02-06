@@ -62,9 +62,9 @@ export function ShapeDiagram({ section, params, width = 240, height = 200 }: Sha
       {/* Cross section fill */}
       <path
         d={outerPath}
-        fill="var(--color-primary)"
-        fillOpacity={0.15}
-        stroke="var(--color-primary)"
+        fill="var(--color-section-fill)"
+        fillOpacity={0.2}
+        stroke="var(--color-section-stroke)"
         strokeWidth={1.5}
       />
       {holePaths.map((hp, i) => (
@@ -72,7 +72,7 @@ export function ShapeDiagram({ section, params, width = 240, height = 200 }: Sha
           key={i}
           d={hp}
           fill="var(--color-background)"
-          stroke="var(--color-primary)"
+          stroke="var(--color-section-stroke)"
           strokeWidth={1.5}
           strokeDasharray="4 2"
         />
