@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-border: oklch(0.922 0.004 286.32);
+  --color-input: oklch(0.922 0.004 286.32);
+  --color-ring: oklch(0.708 0.165 254.624);
+  --color-background: oklch(1 0 0);
+  --color-foreground: oklch(0.145 0.004 286.32);
+  --color-primary: oklch(0.408 0.153 248.36);
+  --color-primary-foreground: oklch(0.985 0.002 247.839);
+  --color-secondary: oklch(0.967 0.001 286.375);
+  --color-secondary-foreground: oklch(0.21 0.006 285.885);
+  --color-destructive: oklch(0.577 0.245 27.325);
+  --color-destructive-foreground: oklch(0.577 0.245 27.325);
+  --color-muted: oklch(0.967 0.001 286.375);
+  --color-muted-foreground: oklch(0.553 0.013 286.067);
+  --color-accent: oklch(0.967 0.001 286.375);
+  --color-accent-foreground: oklch(0.21 0.006 285.885);
+  --color-popover: oklch(1 0 0);
+  --color-popover-foreground: oklch(0.145 0.004 286.32);
+  --color-card: oklch(1 0 0);
+  --color-card-foreground: oklch(0.145 0.004 286.32);
+  --radius: 0.625rem;
+
+  --color-eng-blue: oklch(0.408 0.153 248.36);
+  --color-eng-red: oklch(0.577 0.245 27.325);
+  --color-eng-green: oklch(0.527 0.154 150.069);
+  --color-eng-orange: oklch(0.705 0.191 47.604);
+  --color-eng-grid: oklch(0.9 0.01 240);
+  --color-eng-axis: oklch(0.5 0.1 250);
+  --color-eng-pna: oklch(0.577 0.245 27.325);
+}
+
+@layer base {
+  .dark {
+    --color-border: oklch(0.274 0.006 286.033);
+    --color-input: oklch(0.274 0.006 286.033);
+    --color-ring: oklch(0.551 0.18 254.139);
+    --color-background: oklch(0.141 0.005 285.823);
+    --color-foreground: oklch(0.985 0.002 247.839);
+    --color-primary: oklch(0.551 0.18 254.139);
+    --color-primary-foreground: oklch(0.985 0.002 247.839);
+    --color-secondary: oklch(0.218 0.006 285.885);
+    --color-secondary-foreground: oklch(0.985 0.002 247.839);
+    --color-destructive: oklch(0.704 0.191 22.216);
+    --color-destructive-foreground: oklch(0.985 0.002 247.839);
+    --color-muted: oklch(0.218 0.006 285.885);
+    --color-muted-foreground: oklch(0.716 0.007 286.286);
+    --color-accent: oklch(0.218 0.006 285.885);
+    --color-accent-foreground: oklch(0.985 0.002 247.839);
+    --color-popover: oklch(0.141 0.005 285.823);
+    --color-popover-foreground: oklch(0.985 0.002 247.839);
+    --color-card: oklch(0.18 0.005 285.823);
+    --color-card-foreground: oklch(0.985 0.002 247.839);
+
+    --color-eng-grid: oklch(0.3 0.01 240);
+    --color-eng-axis: oklch(0.55 0.1 250);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    margin: 0;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+}
