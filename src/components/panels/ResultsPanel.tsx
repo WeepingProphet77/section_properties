@@ -1,9 +1,7 @@
 import { useCallback } from 'react';
 import type { SectionProperties } from '@/types/geometry';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { Copy, FileDown } from 'lucide-react';
+import { Copy, FileDown, BarChart3, Target, Maximize2, Move, Activity } from 'lucide-react';
 
 interface ResultsPanelProps {
   properties: SectionProperties | null;
@@ -23,16 +21,32 @@ interface PropertyRowProps {
   label: string;
   value: string;
   unit: string;
-  indent?: boolean;
 }
 
-function PropertyRow({ label, value, unit, indent }: PropertyRowProps) {
+function PropertyRow({ label, value, unit }: PropertyRowProps) {
   return (
-    <div className={`flex justify-between items-baseline py-0.5 ${indent ? 'pl-3' : ''}`}>
-      <span className="text-sm text-muted-foreground">{label}</span>
-      <span className="text-sm font-mono font-medium">
-        {value} <span className="text-xs text-muted-foreground">{unit}</span>
+    <div className="flex justify-between items-baseline py-[3px] group">
+      <span className="text-[12px] text-muted-foreground group-hover:text-foreground transition-colors">{label}</span>
+      <span className="text-[12px] font-mono font-semibold tabular-nums">
+        {value} <span className="text-[10px] text-muted-foreground font-normal">{unit}</span>
       </span>
+    </div>
+  );
+}
+
+interface SectionHeaderProps {
+  icon: React.ReactNode;
+  title: string;
+  color: string;
+}
+
+function SectionHeader({ icon, title, color }: SectionHeaderProps) {
+  return (
+    <div className="flex items-center gap-2 px-4 py-2">
+      <div className={`flex items-center justify-center w-5 h-5 rounded ${color}`}>
+        {icon}
+      </div>
+      <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground">{title}</span>
     </div>
   );
 }
@@ -83,7 +97,6 @@ export function ResultsPanel({ properties }: ResultsPanelProps) {
 
   const exportPDF = useCallback(() => {
     if (!properties) return;
-    // Create a printable window
     const { elastic: e, plastic: p } = properties;
     const html = `
       <!DOCTYPE html>
@@ -149,7 +162,8 @@ export function ResultsPanel({ properties }: ResultsPanelProps) {
 
   if (!properties) {
     return (
-      <div className="flex items-center justify-center h-full p-6">
+      <div className="flex flex-col items-center justify-center h-full p-6 gap-3">
+        <BarChart3 className="w-8 h-8 text-muted-foreground/40" />
         <p className="text-sm text-muted-foreground text-center">
           Select a shape or import a DXF file to see calculated properties.
         </p>
@@ -173,88 +187,88 @@ export function ResultsPanel({ properties }: ResultsPanelProps) {
         </Button>
       </div>
 
-      {/* Elastic Properties */}
-      <Card className="border-0 shadow-none rounded-none">
-        <CardHeader className="pb-1">
-          <CardTitle className="text-sm font-semibold text-primary">Elastic Properties</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-0">
-          <PropertyRow label="Area (A)" value={fmt(e.area)} unit="in²" />
-          <PropertyRow label="Centroid x̄" value={fmt(e.centroidX)} unit="in" />
-          <PropertyRow label="Centroid ȳ" value={fmt(e.centroidY)} unit="in" />
-        </CardContent>
-      </Card>
+      {/* Area & Centroid */}
+      <SectionHeader
+        icon={<Target className="w-3 h-3 text-white" />}
+        title="Area & Centroid"
+        color="bg-eng-blue"
+      />
+      <div className="px-4 pb-3">
+        <PropertyRow label="Area (A)" value={fmt(e.area)} unit="in²" />
+        <PropertyRow label="Centroid x̄" value={fmt(e.centroidX)} unit="in" />
+        <PropertyRow label="Centroid ȳ" value={fmt(e.centroidY)} unit="in" />
+      </div>
 
-      <Separator />
+      <div className="h-px bg-border mx-4" />
 
       {/* Moments of Inertia */}
-      <Card className="border-0 shadow-none rounded-none">
-        <CardHeader className="pb-1">
-          <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Moments of Inertia</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-0">
-          <PropertyRow label="Iₓ" value={fmt(e.Ix)} unit="in⁴" />
-          <PropertyRow label="Iᵧ" value={fmt(e.Iy)} unit="in⁴" />
-          <PropertyRow label="Iₓᵧ" value={fmt(e.Ixy)} unit="in⁴" />
-        </CardContent>
-      </Card>
+      <SectionHeader
+        icon={<Activity className="w-3 h-3 text-white" />}
+        title="Moments of Inertia"
+        color="bg-eng-purple"
+      />
+      <div className="px-4 pb-3">
+        <PropertyRow label="Iₓ" value={fmt(e.Ix)} unit="in⁴" />
+        <PropertyRow label="Iᵧ" value={fmt(e.Iy)} unit="in⁴" />
+        <PropertyRow label="Iₓᵧ" value={fmt(e.Ixy)} unit="in⁴" />
+      </div>
 
-      <Separator />
+      <div className="h-px bg-border mx-4" />
 
       {/* Principal Moments */}
-      <Card className="border-0 shadow-none rounded-none">
-        <CardHeader className="pb-1">
-          <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Principal Moments</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-0">
-          <PropertyRow label="I₁ (max)" value={fmt(e.Ix_principal)} unit="in⁴" />
-          <PropertyRow label="I₂ (min)" value={fmt(e.Iy_principal)} unit="in⁴" />
-          <PropertyRow label="θ (angle)" value={fmtAngle(e.theta_principal)} unit="" />
-        </CardContent>
-      </Card>
+      <SectionHeader
+        icon={<Move className="w-3 h-3 text-white" />}
+        title="Principal Moments"
+        color="bg-eng-teal"
+      />
+      <div className="px-4 pb-3">
+        <PropertyRow label="I₁ (max)" value={fmt(e.Ix_principal)} unit="in⁴" />
+        <PropertyRow label="I₂ (min)" value={fmt(e.Iy_principal)} unit="in⁴" />
+        <PropertyRow label="θ (angle)" value={fmtAngle(e.theta_principal)} unit="" />
+      </div>
 
-      <Separator />
+      <div className="h-px bg-border mx-4" />
 
       {/* Section Moduli */}
-      <Card className="border-0 shadow-none rounded-none">
-        <CardHeader className="pb-1">
-          <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Section Moduli</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-0">
-          <PropertyRow label="Sₓ (top)" value={fmt(e.Sx_top)} unit="in³" />
-          <PropertyRow label="Sₓ (bot)" value={fmt(e.Sx_bot)} unit="in³" />
-          <PropertyRow label="Sᵧ (left)" value={fmt(e.Sy_left)} unit="in³" />
-          <PropertyRow label="Sᵧ (right)" value={fmt(e.Sy_right)} unit="in³" />
-        </CardContent>
-      </Card>
+      <SectionHeader
+        icon={<Maximize2 className="w-3 h-3 text-white" />}
+        title="Section Moduli"
+        color="bg-eng-green"
+      />
+      <div className="px-4 pb-3">
+        <PropertyRow label="Sₓ (top)" value={fmt(e.Sx_top)} unit="in³" />
+        <PropertyRow label="Sₓ (bot)" value={fmt(e.Sx_bot)} unit="in³" />
+        <PropertyRow label="Sᵧ (left)" value={fmt(e.Sy_left)} unit="in³" />
+        <PropertyRow label="Sᵧ (right)" value={fmt(e.Sy_right)} unit="in³" />
+      </div>
 
-      <Separator />
+      <div className="h-px bg-border mx-4" />
 
       {/* Radii of Gyration */}
-      <Card className="border-0 shadow-none rounded-none">
-        <CardHeader className="pb-1">
-          <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Radii of Gyration</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-0">
-          <PropertyRow label="rₓ" value={fmt(e.rx)} unit="in" />
-          <PropertyRow label="rᵧ" value={fmt(e.ry)} unit="in" />
-        </CardContent>
-      </Card>
+      <SectionHeader
+        icon={<Target className="w-3 h-3 text-white" />}
+        title="Radii of Gyration"
+        color="bg-eng-orange"
+      />
+      <div className="px-4 pb-3">
+        <PropertyRow label="rₓ" value={fmt(e.rx)} unit="in" />
+        <PropertyRow label="rᵧ" value={fmt(e.ry)} unit="in" />
+      </div>
 
-      <Separator />
+      <div className="h-px bg-border mx-4" />
 
       {/* Plastic Properties */}
-      <Card className="border-0 shadow-none rounded-none">
-        <CardHeader className="pb-1">
-          <CardTitle className="text-sm font-semibold text-primary">Plastic Properties</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-0">
-          <PropertyRow label="PNA-X (y)" value={fmt(p.pnaX)} unit="in" />
-          <PropertyRow label="PNA-Y (x)" value={fmt(p.pnaY)} unit="in" />
-          <PropertyRow label="Zₓ" value={fmt(p.Zx)} unit="in³" />
-          <PropertyRow label="Zᵧ" value={fmt(p.Zy)} unit="in³" />
-        </CardContent>
-      </Card>
+      <SectionHeader
+        icon={<BarChart3 className="w-3 h-3 text-white" />}
+        title="Plastic Properties"
+        color="bg-eng-red"
+      />
+      <div className="px-4 pb-3">
+        <PropertyRow label="PNA-X (y)" value={fmt(p.pnaX)} unit="in" />
+        <PropertyRow label="PNA-Y (x)" value={fmt(p.pnaY)} unit="in" />
+        <PropertyRow label="Zₓ" value={fmt(p.Zx)} unit="in³" />
+        <PropertyRow label="Zᵧ" value={fmt(p.Zy)} unit="in³" />
+      </div>
     </div>
   );
 }

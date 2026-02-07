@@ -289,4 +289,54 @@ export const shapeTemplates: ShapeTemplate[] = [
       return { outerBoundary, holes: [hole1, hole2, hole3] };
     },
   },
+
+  // 10. Stacked Rectangles (one above the other)
+  {
+    type: 'stacked-rectangles',
+    name: 'Stacked Rectangles',
+    description: 'Two rectangles stacked vertically',
+    parameters: [
+      { key: 'b1', label: 'Bottom Width (b1)', unit: 'in', min: 0.1, max: 100, step: 0.125, defaultValue: 10 },
+      { key: 'h1', label: 'Bottom Height (h1)', unit: 'in', min: 0.1, max: 100, step: 0.125, defaultValue: 2 },
+      { key: 'b2', label: 'Top Width (b2)', unit: 'in', min: 0.1, max: 100, step: 0.125, defaultValue: 6 },
+      { key: 'h2', label: 'Top Height (h2)', unit: 'in', min: 0.1, max: 100, step: 0.125, defaultValue: 8 },
+    ],
+    generateGeometry: (params): CrossSection => {
+      const { b1, h1, b2, h2 } = params;
+      // Center both rectangles on the same vertical centerline
+      const maxW = Math.max(b1, b2);
+      const x1L = (maxW - b1) / 2;
+      const x1R = x1L + b1;
+      const x2L = (maxW - b2) / 2;
+      const x2R = x2L + b2;
+
+      if (Math.abs(b1 - b2) < 0.001) {
+        // Same width: just a tall rectangle
+        return {
+          outerBoundary: [
+            { x: x1L, y: 0 },
+            { x: x1R, y: 0 },
+            { x: x1R, y: h1 + h2 },
+            { x: x1L, y: h1 + h2 },
+          ],
+          holes: [],
+        };
+      }
+
+      // Step inward or outward at the junction
+      return {
+        outerBoundary: [
+          { x: x1L, y: 0 },
+          { x: x1R, y: 0 },
+          { x: x1R, y: h1 },
+          { x: x2R, y: h1 },
+          { x: x2R, y: h1 + h2 },
+          { x: x2L, y: h1 + h2 },
+          { x: x2L, y: h1 },
+          { x: x1L, y: h1 },
+        ],
+        holes: [],
+      };
+    },
+  },
 ];
