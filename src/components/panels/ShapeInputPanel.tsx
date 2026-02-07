@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import {
   Square, Circle, BoxSelect, Minus, CornerDownRight,
   AlignVerticalJustifyStart, Columns2, Upload, AlertTriangle,
-  Rows2, SlidersHorizontal, Shapes,
+  Rows2, SlidersHorizontal, Shapes, GalleryVerticalEnd,
 } from 'lucide-react';
 
 interface ShapeInputPanelProps {
@@ -27,6 +27,7 @@ const shapeIcons: Record<ShapeType, React.ReactNode> = {
   'wide-flange': <Minus className="w-4 h-4" />,
   'double-angle': <Columns2 className="w-4 h-4" />,
   'stacked-rectangles': <Rows2 className="w-4 h-4" />,
+  'sandwich-panel': <GalleryVerticalEnd className="w-4 h-4" />,
 };
 
 export function ShapeInputPanel({ onSectionChange }: ShapeInputPanelProps) {

@@ -339,4 +339,99 @@ export const shapeTemplates: ShapeTemplate[] = [
       };
     },
   },
+
+  // 11. Sandwich Panel (two rectangles with a gap between them)
+  {
+    type: 'sandwich-panel',
+    name: 'Sandwich Panel',
+    description: 'Two wythes separated by a gap (sandwich wall panel)',
+    parameters: [
+      { key: 'b1', label: 'Bottom Wythe Width (b1)', unit: 'in', min: 0.1, max: 100, step: 0.125, defaultValue: 12 },
+      { key: 'h1', label: 'Bottom Wythe Thickness (h1)', unit: 'in', min: 0.1, max: 50, step: 0.125, defaultValue: 3 },
+      { key: 'b2', label: 'Top Wythe Width (b2)', unit: 'in', min: 0.1, max: 100, step: 0.125, defaultValue: 12 },
+      { key: 'h2', label: 'Top Wythe Thickness (h2)', unit: 'in', min: 0.1, max: 50, step: 0.125, defaultValue: 3 },
+      { key: 'g', label: 'Gap (g)', unit: 'in', min: 0, max: 50, step: 0.125, defaultValue: 4 },
+    ],
+    generateGeometry: (params): CrossSection => {
+      const { b1, h1, b2, h2, g } = params;
+      const maxW = Math.max(b1, b2);
+      const x1L = (maxW - b1) / 2;
+      const x1R = x1L + b1;
+      const x2L = (maxW - b2) / 2;
+      const x2R = x2L + b2;
+      const totalH = h1 + g + h2;
+
+      if (g < 0.001) {
+        // No gap — same as stacked rectangles (touching)
+        if (Math.abs(b1 - b2) < 0.001) {
+          return {
+            outerBoundary: [
+              { x: x1L, y: 0 }, { x: x1R, y: 0 },
+              { x: x1R, y: totalH }, { x: x1L, y: totalH },
+            ],
+            holes: [],
+          };
+        }
+        return {
+          outerBoundary: [
+            { x: x1L, y: 0 }, { x: x1R, y: 0 },
+            { x: x1R, y: h1 }, { x: x2R, y: h1 },
+            { x: x2R, y: totalH }, { x: x2L, y: totalH },
+            { x: x2L, y: h1 }, { x: x1L, y: h1 },
+          ],
+          holes: [],
+        };
+      }
+
+      // With gap: bounding box + hole for the gap region
+      const outerBoundary = [
+        { x: 0, y: 0 },
+        { x: maxW, y: 0 },
+        { x: maxW, y: totalH },
+        { x: 0, y: totalH },
+      ];
+
+      const holes = [];
+
+      // Left void above bottom wythe (if bottom narrower than bbox)
+      if (x1L > 0.001) {
+        holes.push([
+          { x: 0, y: 0 }, { x: x1L, y: 0 },
+          { x: x1L, y: h1 }, { x: 0, y: h1 },
+        ]);
+      }
+      // Right void above bottom wythe (if bottom narrower than bbox)
+      if (maxW - x1R > 0.001) {
+        holes.push([
+          { x: x1R, y: 0 }, { x: maxW, y: 0 },
+          { x: maxW, y: h1 }, { x: x1R, y: h1 },
+        ]);
+      }
+
+      // Gap void (full width of bounding box)
+      holes.push([
+        { x: 0, y: h1 },
+        { x: maxW, y: h1 },
+        { x: maxW, y: h1 + g },
+        { x: 0, y: h1 + g },
+      ]);
+
+      // Left void below top wythe (if top narrower than bbox)
+      if (x2L > 0.001) {
+        holes.push([
+          { x: 0, y: h1 + g }, { x: x2L, y: h1 + g },
+          { x: x2L, y: totalH }, { x: 0, y: totalH },
+        ]);
+      }
+      // Right void below top wythe (if top narrower than bbox)
+      if (maxW - x2R > 0.001) {
+        holes.push([
+          { x: x2R, y: h1 + g }, { x: maxW, y: h1 + g },
+          { x: maxW, y: totalH }, { x: x2R, y: totalH },
+        ]);
+      }
+
+      return { outerBoundary, holes };
+    },
+  },
 ];

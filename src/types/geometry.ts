@@ -53,7 +53,8 @@ export type ShapeType =
   | 'c-shape'
   | 'wide-flange'
   | 'double-angle'
-  | 'stacked-rectangles';
+  | 'stacked-rectangles'
+  | 'sandwich-panel';
 
 export interface ShapeParameter {
   key: string;
